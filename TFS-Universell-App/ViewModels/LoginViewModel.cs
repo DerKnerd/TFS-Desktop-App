@@ -1,7 +1,8 @@
 ﻿namespace TFS.Client.ViewModels {
-    using Utils;
 
-    public class LoginViewModel : NotifyPropertyChanged {
+    using MyToolkit.Model;
+
+    public class LoginViewModel : ObservableObject {
         private string username;
 
         public string Username {
@@ -9,7 +10,7 @@
             set {
                 if (username != value) {
                     username = value;
-                    OnPropertyChanged();
+                    RaisePropertyChanged();
                 }
             }
         }
@@ -21,7 +22,7 @@
             set {
                 if (password != value) {
                     password = value;
-                    OnPropertyChanged();
+                    RaisePropertyChanged();
                 }
             }
         }
@@ -33,7 +34,7 @@
             set {
                 if (url != value) {
                     url = value;
-                    OnPropertyChanged();
+                    RaisePropertyChanged();
                 }
             }
         }

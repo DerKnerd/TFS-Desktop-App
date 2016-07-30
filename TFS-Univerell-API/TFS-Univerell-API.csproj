@@ -7,7 +7,7 @@
     <ProjectGuid>{721998B6-95E3-4E84-8832-0B2A5918A9A3}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>TFS.Univerell.API</RootNamespace>
+    <RootNamespace>TFS.API</RootNamespace>
     <AssemblyName>TFS-Univerell-API</AssemblyName>
     <DefaultLanguage>de-DE</DefaultLanguage>
     <TargetPlatformIdentifier>UAP</TargetPlatformIdentifier>
@@ -108,7 +108,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TfsClient.cs" />
     <EmbeddedResource Include="Properties\TFS_Univerell_API.rd.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Models\" />
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>

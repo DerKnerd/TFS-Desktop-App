@@ -117,11 +117,17 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="ListProjectsPageTitle.Text" xml:space="preserve">
+    <value>Projektliste</value>
+  </data>
   <data name="LoginDialog.PrimaryButtonText" xml:space="preserve">
     <value>Anmelden</value>
   </data>
   <data name="LoginDialog.SecondaryButtonText" xml:space="preserve">
     <value>Abbrechen</value>
+  </data>
+  <data name="LoginDialog.Title" xml:space="preserve">
+    <value>Anmelden</value>
   </data>
   <data name="LoginDialogPassword.Text" xml:space="preserve">
     <value>Passwort</value>
@@ -131,5 +137,23 @@
   </data>
   <data name="LoginDialogUsername.Text" xml:space="preserve">
     <value>Benutzername</value>
+  </data>
+  <data name="Search" xml:space="preserve">
+    <value>Suche</value>
+  </data>
+  <data name="SelectTeamProjectCollectionDialog.PrimaryButtonText" xml:space="preserve">
+    <value>Auswählen</value>
+  </data>
+  <data name="SelectTeamProjectCollectionDialog.SecondaryButtonText" xml:space="preserve">
+    <value>Abbrechen</value>
+  </data>
+  <data name="SelectTeamProjectCollectionDialog.Title" xml:space="preserve">
+    <value>Teamprojektsammlung auswählen</value>
+  </data>
+  <data name="Settings" xml:space="preserve">
+    <value>Einstellungen</value>
+  </data>
+  <data name="SettingsPageTitle.Text" xml:space="preserve">
+    <value>Einstellungen</value>
   </data>
 </root>

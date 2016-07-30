@@ -98,17 +98,28 @@
     <Compile Include="Dialogs\LoginDialog.xaml.cs">
       <DependentUpon>LoginDialog.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Dialogs\SelectTeamProjectCollectionDialog.xaml.cs">
+      <DependentUpon>SelectTeamProjectCollectionDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="UserControls\HamburgerHeader.xaml.cs">
       <DependentUpon>HamburgerHeader.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Utils\NotifyPropertyChanged.cs" />
+    <Compile Include="UserControls\PlaceholderHamburgerItem.cs" />
     <Compile Include="ViewModels\LoginViewModel.cs" />
+    <Compile Include="ViewModels\SelectTeamProjectCollectionViewModel.cs" />
+    <Compile Include="ViewModels\SettingsViewModel.cs" />
+    <Compile Include="Views\ListProjectsPage.xaml.cs">
+      <DependentUpon>ListProjectsPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\ProjectOverviewPage.xaml.cs">
       <DependentUpon>ProjectOverviewPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\SearchTasksPage.xaml.cs">
       <DependentUpon>SearchTasksPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\SettingsPage.xaml.cs">
+      <DependentUpon>SettingsPage.xaml</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
@@ -118,6 +129,7 @@
     <PRIResource Include="Strings\de-DE\Resources.resw" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Assets\run.png" />
     <Content Include="Properties\Default.rd.xml" />
     <Content Include="Assets\LockScreenLogo.scale-200.png" />
     <Content Include="Assets\SplashScreen.scale-200.png" />
@@ -133,13 +145,23 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Utils\" />
+  </ItemGroup>
   <ItemGroup>
     <Page Include="Dialogs\LoginDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Dialogs\SelectTeamProjectCollectionDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="UserControls\HamburgerHeader.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\ListProjectsPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -151,6 +173,16 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\SettingsPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\TFS-Univerell-API\TFS-Univerell-API.csproj">
+      <Project>{721998b6-95e3-4e84-8832-0b2a5918a9a3}</Project>
+      <Name>TFS-Univerell-API</Name>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
