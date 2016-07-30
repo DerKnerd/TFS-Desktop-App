@@ -32,7 +32,19 @@
             </TextBlock>
         </Controls:WindowCommands>
     </Controls:MetroWindow.RightWindowCommands>
-    <Grid>
-
-    </Grid>
+    <DockPanel>
+        <TreeView Width="200" Margin="0,47,0,0">
+            <TreeView.Items>
+                <TreeViewItem Header="DefaultCollection" IsExpanded="True">
+                    <TreeViewItem Header="Justatest"></TreeViewItem>
+                    <TreeViewItem Header="Anothertest"></TreeViewItem>
+                    <TreeViewItem Header="Test Test Test"></TreeViewItem>
+                </TreeViewItem>
+            </TreeView.Items>
+        </TreeView>
+        <TabControl>
+            <TabItem Header="Boards"></TabItem>
+            <TabItem Header="Tasks"></TabItem>
+        </TabControl>
+    </DockPanel>
 </Controls:MetroWindow>
