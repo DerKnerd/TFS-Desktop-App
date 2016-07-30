@@ -1,0 +1,9 @@
+﻿<mt:MtApplication
+    x:Class="TFS.Client.App"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:mt="using:MyToolkit.Paging"
+    xmlns:local="using:TFS.Client">
+    <mt:MtApplication.Resources>
+    </mt:MtApplication.Resources>
+</mt:MtApplication>
