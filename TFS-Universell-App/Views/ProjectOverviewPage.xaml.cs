@@ -20,6 +20,7 @@ namespace TFS.Client.Views {
             (Application.Current as App).SetTopItemsForProject((Guid)args.Parameter);
             var project = await App.TfsClient.GetProject((Guid)args.Parameter);
             (Application.Current as App).UpdateHamburgerTitle(project.Name);
+            await App.GetFrame().NavigateAsync(typeof(MyTasksPage));
         }
     }
 }

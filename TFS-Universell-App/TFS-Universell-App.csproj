@@ -107,11 +107,17 @@
       <DependentUpon>HamburgerHeader.xaml</DependentUpon>
     </Compile>
     <Compile Include="UserControls\PlaceholderHamburgerItem.cs" />
+    <Compile Include="UserControls\TaskTableView.xaml.cs">
+      <DependentUpon>TaskTableView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="ViewModels\LoginViewModel.cs" />
     <Compile Include="ViewModels\SelectTeamProjectCollectionViewModel.cs" />
     <Compile Include="ViewModels\SettingsViewModel.cs" />
     <Compile Include="Views\ListProjectsPage.xaml.cs">
       <DependentUpon>ListProjectsPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\MyTasksPage.xaml.cs">
+      <DependentUpon>MyTasksPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\ProjectOverviewPage.xaml.cs">
       <DependentUpon>ProjectOverviewPage.xaml</DependentUpon>
@@ -162,7 +168,15 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="UserControls\TaskTableView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Views\ListProjectsPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\MyTasksPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

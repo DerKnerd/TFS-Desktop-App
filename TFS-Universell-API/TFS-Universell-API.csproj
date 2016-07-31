@@ -112,6 +112,7 @@
     <Compile Include="Models\Query.cs" />
     <Compile Include="Models\Queue.cs" />
     <Compile Include="Models\TeamProject.cs" />
+    <Compile Include="Models\WorkItem.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TfsClient.cs" />
   </ItemGroup>

@@ -126,15 +126,10 @@
         public async void SetTopItemsForProject(Guid project) {
             ClearHamburgerTopItems(getSearchTasksHamburgerItem());
             AddHamburgerTopItem(new PageHamburgerItem {
-                Content = "Projekt",
-                ContentIcon = new FontAwesome.UWP.FontAwesome { Icon = FontAwesome.UWP.FontAwesomeIcon.University },
-                Icon = new FontAwesome.UWP.FontAwesome { Icon = FontAwesome.UWP.FontAwesomeIcon.University },
-                PageType = typeof(ProjectOverviewPage)
-            });
-            AddHamburgerTopItem(new PageHamburgerItem {
                 Content = "Meine Tasks",
                 ContentIcon = new FontAwesome.UWP.FontAwesome { Icon = FontAwesome.UWP.FontAwesomeIcon.List },
-                Icon = new FontAwesome.UWP.FontAwesome { Icon = FontAwesome.UWP.FontAwesomeIcon.List }
+                Icon = new FontAwesome.UWP.FontAwesome { Icon = FontAwesome.UWP.FontAwesomeIcon.List },
+                PageType = typeof(MyTasksPage)
             });
             AddHamburgerTopItem(new PageHamburgerItem {
                 Content = "Backlog",
