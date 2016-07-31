@@ -6,9 +6,19 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:mt="using:MyToolkit.Paging"
-    mc:Ignorable="d">
+    mc:Ignorable="d"
+    Name="view">
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-        <TextBlock x:Uid="ListProjectsPageTitle"></TextBlock>
+        <GridView Name="Grid" ItemClick="Grid_ItemClick">
+            <GridView.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel Orientation="Vertical" Width="204" Height="100" Margin="2" Padding="5" Background="{StaticResource SystemControlBackgroundAccentBrush}">
+                        <TextBlock Foreground="White" FontWeight="Bold" Text="{Binding Name}"></TextBlock>
+                        <TextBlock Foreground="White" Text="{Binding Description}"></TextBlock>
+                    </StackPanel>
+                </DataTemplate>
+            </GridView.ItemTemplate>
+        </GridView>
     </Grid>
 </mt:MtPage>

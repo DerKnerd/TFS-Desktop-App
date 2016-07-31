@@ -19,7 +19,7 @@ namespace TFS.Client.Dialogs {
         private async void ContentDialog_PrimaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args) {
             try {
                 var dfd = args.GetDeferral();
-                ApplicationData.Current.LocalSettings.Values["SelectedCollection"] = ViewModel.Collection.Name;
+                ApplicationData.Current.LocalSettings.Values["SelectedCollection"] = ViewModel.Collection;
                 dfd.Complete();
             } catch (Exception ex) {
                 var diag = new MessageDialog($"Cannot select collection{Environment.NewLine}{ex.Message}");

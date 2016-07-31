@@ -22,15 +22,16 @@ namespace TFS.Client.Dialogs {
         private async void ContentDialog_PrimaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args) {
             try {
                 var dfd = args.GetDeferral();
+#if !DEBUG
                 var passwordVault = new PasswordVault();
                 var password = new PasswordCredential("TFS.Client", ViewModel.Username, ViewModel.Password);
-                ApplicationData.Current.LocalSettings.Values["TFSUrl"] = ViewModel.Url;
                 passwordVault.Add(password);
+#endif
+                ApplicationData.Current.LocalSettings.Values["TFSUrl"] = ViewModel.Url;
                 dfd.Complete();
             } catch (Exception ex) {
                 var diag = new MessageDialog($"Cannot login{Environment.NewLine}{ex.Message}");
                 await diag.ShowAsync();
-                await this.ShowAsync();
             }
         }
 

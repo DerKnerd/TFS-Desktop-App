@@ -11,8 +11,7 @@
     PrimaryButtonText=""
     SecondaryButtonText=""
     PrimaryButtonClick="ContentDialog_PrimaryButtonClick"
-    SecondaryButtonClick="ContentDialog_SecondaryButtonClick"
-    Loaded="View_Loaded">
+    SecondaryButtonClick="ContentDialog_SecondaryButtonClick">
 
     <Grid>
         <TextBox Text="{Binding ViewModel.Collection, ElementName=View, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" InputScope="Url" />

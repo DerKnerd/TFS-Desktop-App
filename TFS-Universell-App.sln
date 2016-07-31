@@ -1,11 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.25123.0
+VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TFS-Universell-App", "TFS-Universell-App\TFS-Universell-App.csproj", "{3156A36B-F096-45B3-A0A2-F6D3E7E492AA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TFS-Univerell-API", "TFS-Univerell-API\TFS-Univerell-API.csproj", "{721998B6-95E3-4E84-8832-0B2A5918A9A3}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TFS-Universell-API", "TFS-Universell-API\TFS-Universell-API.csproj", "{721998B6-95E3-4E84-8832-0B2A5918A9A3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -19,7 +19,9 @@ Global
 		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{3156A36B-F096-45B3-A0A2-F6D3E7E492AA}.Debug|Any CPU.ActiveCfg = Debug|x86
+		{3156A36B-F096-45B3-A0A2-F6D3E7E492AA}.Debug|Any CPU.ActiveCfg = Debug|x64
+		{3156A36B-F096-45B3-A0A2-F6D3E7E492AA}.Debug|Any CPU.Build.0 = Debug|x64
+		{3156A36B-F096-45B3-A0A2-F6D3E7E492AA}.Debug|Any CPU.Deploy.0 = Debug|x64
 		{3156A36B-F096-45B3-A0A2-F6D3E7E492AA}.Debug|ARM.ActiveCfg = Debug|ARM
 		{3156A36B-F096-45B3-A0A2-F6D3E7E492AA}.Debug|ARM.Build.0 = Debug|ARM
 		{3156A36B-F096-45B3-A0A2-F6D3E7E492AA}.Debug|ARM.Deploy.0 = Debug|ARM

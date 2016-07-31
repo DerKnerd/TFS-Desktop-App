@@ -7,6 +7,9 @@
 
         public SelectTeamProjectCollectionViewModel() {
             this.Collection = ApplicationData.Current.LocalSettings.Values["SelectedCollection"]?.ToString();
+            if (this.Collection == null) {
+                this.Collection = "DefaultCollection";
+            }
         }
 
         private string collection;

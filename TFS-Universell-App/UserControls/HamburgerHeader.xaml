@@ -10,6 +10,6 @@
     d:DesignWidth="400">
 
     <Grid Background="{ThemeResource SystemChromeLowColor}">
-        <TextBlock Text="TFS Client" x:Uid="HamburgerHeader" VerticalAlignment="Center" Margin="16,0,0,0" />
+        <TextBlock Name="HamburgerHeaderTitle" Text="TFS Client" x:Uid="HamburgerHeader" VerticalAlignment="Center" Margin="16,0,0,0" />
     </Grid>
 </UserControl>
