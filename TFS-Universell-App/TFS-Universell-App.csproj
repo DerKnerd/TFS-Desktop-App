@@ -113,6 +113,7 @@
     <Compile Include="ViewModels\LoginViewModel.cs" />
     <Compile Include="ViewModels\SelectTeamProjectCollectionViewModel.cs" />
     <Compile Include="ViewModels\SettingsViewModel.cs" />
+    <Compile Include="ViewModels\TasksViewModel.cs" />
     <Compile Include="Views\ListProjectsPage.xaml.cs">
       <DependentUpon>ListProjectsPage.xaml</DependentUpon>
     </Compile>

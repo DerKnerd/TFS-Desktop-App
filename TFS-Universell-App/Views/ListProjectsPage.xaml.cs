@@ -4,6 +4,7 @@ namespace TFS.Client.Views {
     using MyToolkit.Paging;
     using API.Models;
     using Windows.UI.Xaml;
+    using System.Linq;
 
     /// <summary>
     /// Eine leere Seite, die eigenständig verwendet oder zu der innerhalb eines Rahmens navigiert werden kann.
@@ -25,9 +26,9 @@ namespace TFS.Client.Views {
 
         protected async override void OnNavigatedTo(MtNavigationEventArgs args) {
             base.OnNavigatedTo(args);
-            var items = await App.TfsClient?.GetProjects();
+            var items = await App.TfsClient?.GetProjects(0, 255);
             Grid.Items.Clear();
-            foreach (var item in items) {
+            foreach (var item in items.Value.OrderBy(o => o.Name)) {
                 Grid.Items.Add(item);
             }
         }

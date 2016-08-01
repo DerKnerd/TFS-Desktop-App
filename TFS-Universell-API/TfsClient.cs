@@ -2,7 +2,9 @@
 
     using Models;
     using Newtonsoft.Json;
+    using Newtonsoft.Json.Linq;
     using System;
+    using System.Collections.Generic;
     using System.Text;
     using System.Threading.Tasks;
     using Windows.Storage;
@@ -11,15 +13,14 @@
 
     public class TfsClient {
 
-        public TfsClient(string username, string password) {
-            ReInitialize(username, password);
+        public TfsClient() {
+            ReInitialize();
         }
 
-        public void ReInitialize(string username, string password) {
-            Collection = ApplicationData.Current.LocalSettings.Values["SelectedCollection"].ToString();
+        public void ReInitialize() {
+            Collection = ApplicationData.Current.LocalSettings.Values["SelectedCollection"]?.ToString();
             baseUri = $"{ApplicationData.Current.LocalSettings.Values["TFSUrl"]}/{Collection}/";
             client = new HttpClient();
-            client.DefaultRequestHeaders.Authorization = new HttpCredentialsHeaderValue("Basic", Convert.ToBase64String(Encoding.ASCII.GetBytes($"{username}:{password}")));
         }
 
         private string getUrl(string path, string apiversion) {
@@ -48,11 +49,11 @@
         private HttpClient client;
 
         public async Task<TeamProjectCollection> GetProjects(int skip = 0, int top = 100) {
-            var data = await client.GetStringAsync(new Uri($"{getUrl("projects", "1.0")}&$skip={skip}&top={top}", UriKind.RelativeOrAbsolute));
+            var data = await client.GetStringAsync(new Uri($"{getUrl("projects", "1.0")}&$skip={skip}&$top={top}", UriKind.RelativeOrAbsolute));
             var result = JsonConvert.DeserializeObject<TeamProjectCollection>(data);
             return result;
         }
-        
+
         public async Task<TeamProject> GetProject(Guid project) {
             var data = await client.GetStringAsync(new Uri($"{getUrl($"projects/{project}", "1.0")}", UriKind.RelativeOrAbsolute));
             var result = JsonConvert.DeserializeObject<TeamProject>(data);
@@ -66,9 +67,30 @@
         }
 
         public async Task<QueryCollection> GetQueries(Guid project) {
-            var data = await client.GetStringAsync(new Uri($"{getUrl($"wit/queries?$depth=2", "2.2", project)}", UriKind.RelativeOrAbsolute));
+            var data = await client.GetStringAsync(new Uri($"{getUrl($"wit/queries?$depth=2", "2.0", project)}", UriKind.RelativeOrAbsolute));
             var result = JsonConvert.DeserializeObject<QueryCollection>(data);
             return result;
+        }
+
+        public async Task<WorkItemCollection> GetWorkItemsByIds(List<int> ids) {
+            var data = await client.GetStringAsync(new Uri($"{getUrl($"wit/WorkItems?ids={string.Join(",", ids)}&fields=System.Description,Microsoft.VSTS.Scheduling.Effort,System.IterationPath,System.State,System.Title,System.WorkItemType,Microsoft.VSTS.Common.StateCode", "1.0")}", UriKind.RelativeOrAbsolute));
+            var result = JsonConvert.DeserializeObject<WorkItemCollection>(data);
+            return result;
+        }
+
+        public async Task<WorkItemCollection> GetWorkItemsByQuery(Guid project, string wiql) {
+            var postresult = await client.PostAsync(new Uri($"{getUrl("wit/wiql", "1.0", project)}", UriKind.RelativeOrAbsolute), new HttpStringContent(JsonConvert.SerializeObject(new { query = wiql }), Windows.Storage.Streams.UnicodeEncoding.Utf8, "application/json"));
+            var data = JsonConvert.DeserializeObject<JObject>(await postresult.Content.ReadAsStringAsync());
+            var relations = data["workItemRelations"];
+            var ids = new List<int>();
+            foreach (var item in relations) {
+                ids.Add(item["target"]["id"].Value<int>());
+            }
+            return await GetWorkItemsByIds(ids);
+        }
+
+        public async Task<WorkItemCollection> GetMyWorkItems(Guid project) {
+            return await GetWorkItemsByQuery(project, $"SELECT [System.Id] FROM WorkItemLinks WHERE Source.[System.AssignedTo] = @me AND Source.[System.TeamProject] = @project AND Source.[System.State] <> 'Fertig' AND Source.[System.State] <> 'Geschlossen'");
         }
     }
 }

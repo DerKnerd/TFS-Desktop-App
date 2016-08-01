@@ -4,6 +4,7 @@ namespace TFS.Client.Views {
 
     using MyToolkit.Paging;
     using System;
+    using Windows.Storage;
     using Windows.UI.Xaml;
 
     /// <summary>
@@ -17,9 +18,16 @@ namespace TFS.Client.Views {
 
         protected async override void OnNavigatedTo(MtNavigationEventArgs args) {
             base.OnNavigatedTo(args);
-            (Application.Current as App).SetTopItemsForProject((Guid)args.Parameter);
-            var project = await App.TfsClient.GetProject((Guid)args.Parameter);
+            var projectId = default(Guid);
+            if (args.Parameter is Guid) {
+                projectId = (Guid)args.Parameter;
+            } else {
+                projectId = App.SelectedProject;
+            } 
+            (Application.Current as App).SetTopItemsForProject(projectId);
+            var project = await App.TfsClient.GetProject(projectId);
             (Application.Current as App).UpdateHamburgerTitle(project.Name);
+            ApplicationData.Current.LocalSettings.Values["SelectedProject"] = projectId;
             await App.GetFrame().NavigateAsync(typeof(MyTasksPage));
         }
     }

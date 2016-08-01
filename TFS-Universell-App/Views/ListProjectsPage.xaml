@@ -14,8 +14,8 @@
             <GridView.ItemTemplate>
                 <DataTemplate>
                     <StackPanel Orientation="Vertical" Width="204" Height="100" Margin="2" Padding="5" Background="{StaticResource SystemControlBackgroundAccentBrush}">
-                        <TextBlock Foreground="White" FontWeight="Bold" Text="{Binding Name}"></TextBlock>
-                        <TextBlock Foreground="White" Text="{Binding Description}"></TextBlock>
+                        <TextBlock Foreground="White" FontWeight="Bold" TextWrapping="Wrap" Text="{Binding Name}"></TextBlock>
+                        <TextBlock Foreground="White" TextWrapping="Wrap" Text="{Binding Description}"></TextBlock>
                     </StackPanel>
                 </DataTemplate>
             </GridView.ItemTemplate>
