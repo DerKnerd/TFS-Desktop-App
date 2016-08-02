@@ -30,6 +30,7 @@ namespace TFS.Client.Views {
             Grid.Items.Clear();
             foreach (var item in items.Value.OrderBy(o => o.Name)) {
                 Grid.Items.Add(item);
+              }
             }
         }
 

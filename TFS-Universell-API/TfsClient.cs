@@ -11,7 +11,7 @@
     using Windows.Web.Http;
     using Windows.Web.Http.Headers;
 
-    public class TfsClient {
+  public class TfsClient {
 
         public TfsClient() {
             ReInitialize();
