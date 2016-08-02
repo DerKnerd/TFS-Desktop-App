@@ -10,28 +10,35 @@ namespace TFS.Client.Dialogs {
     using Windows.UI.Xaml;
     using Windows.UI.Xaml.Controls;
 
-    public sealed partial class LoginDialog {
+    public sealed partial class StartupDialog {
 
-        public LoginDialog() {
+        public StartupDialog() {
             this.InitializeComponent();
-            this.ViewModel = new LoginViewModel();
+            this.ViewModel = new StartupViewModel();
         }
 
-        public LoginViewModel ViewModel { get; set; }
+        public StartupViewModel ViewModel { get; set; }
 
         private async void ContentDialog_PrimaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args) {
             try {
                 var dfd = args.GetDeferral();
-#if !DEBUG
-                var passwordVault = new PasswordVault();
-                var password = new PasswordCredential("TFS.Client", ViewModel.Username, ViewModel.Password);
-                passwordVault.Add(password);
-#endif
                 ApplicationData.Current.LocalSettings.Values["TFSUrl"] = ViewModel.Url;
+                ApplicationData.Current.LocalSettings.Values["SelectedCollection"] = ViewModel.Collection;
+
+                var vault = new PasswordVault();
+                try {
+                    var credentialList = vault.FindAllByResource("TFS.Client");
+                    if (credentialList.Count != 0) {
+                        foreach (var item in credentialList) {
+                            vault.Remove(item);
+                        }
+                    }
+                } catch {
+                }
+                vault.Add(new PasswordCredential("TFS.Client", ViewModel.Username, ViewModel.Password));
+
                 dfd.Complete();
             } catch (Exception ex) {
-                var diag = new MessageDialog($"Cannot login{Environment.NewLine}{ex.Message}");
-                await diag.ShowAsync();
             }
         }
 

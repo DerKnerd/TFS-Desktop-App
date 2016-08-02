@@ -120,40 +120,34 @@
   <data name="ListProjectsPageTitle.Text" xml:space="preserve">
     <value>Projektliste</value>
   </data>
-  <data name="LoginDialog.PrimaryButtonText" xml:space="preserve">
-    <value>Anmelden</value>
-  </data>
-  <data name="LoginDialog.SecondaryButtonText" xml:space="preserve">
-    <value>Abbrechen</value>
-  </data>
-  <data name="LoginDialog.Title" xml:space="preserve">
-    <value>Anmelden</value>
-  </data>
-  <data name="LoginDialogPassword.Text" xml:space="preserve">
-    <value>Passwort</value>
-  </data>
-  <data name="LoginDialogUrl.Text" xml:space="preserve">
-    <value>TFS Adresse</value>
-  </data>
-  <data name="LoginDialogUsername.Text" xml:space="preserve">
-    <value>Benutzername</value>
-  </data>
   <data name="Search" xml:space="preserve">
     <value>Suche</value>
-  </data>
-  <data name="SelectTeamProjectCollectionDialog.PrimaryButtonText" xml:space="preserve">
-    <value>Auswählen</value>
-  </data>
-  <data name="SelectTeamProjectCollectionDialog.SecondaryButtonText" xml:space="preserve">
-    <value>Abbrechen</value>
-  </data>
-  <data name="SelectTeamProjectCollectionDialog.Title" xml:space="preserve">
-    <value>Teamprojektsammlung auswählen</value>
   </data>
   <data name="Settings" xml:space="preserve">
     <value>Einstellungen</value>
   </data>
   <data name="SettingsPageTitle.Text" xml:space="preserve">
     <value>Einstellungen</value>
+  </data>
+  <data name="StartupDialog.PrimaryButtonText" xml:space="preserve">
+    <value>Starten</value>
+  </data>
+  <data name="StartupDialog.SecondaryButtonText" xml:space="preserve">
+    <value>Abbrechen</value>
+  </data>
+  <data name="StartupDialog.Title" xml:space="preserve">
+    <value>Startkonfiguration</value>
+  </data>
+  <data name="StartupDialogCollection.Text" xml:space="preserve">
+    <value>Teamprojektsammlung auswählen</value>
+  </data>
+  <data name="StartupDialogLogin.Text" xml:space="preserve">
+    <value>Benutzername</value>
+  </data>
+  <data name="StartupDialogPassword.Text" xml:space="preserve">
+    <value>Passwort</value>
+  </data>
+  <data name="StartupDialogUrl.Text" xml:space="preserve">
+    <value>TFS Adresse</value>
   </data>
 </root>

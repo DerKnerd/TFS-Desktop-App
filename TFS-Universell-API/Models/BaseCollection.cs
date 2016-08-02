@@ -8,6 +8,10 @@
 
     [JsonObject]
     public class BaseCollection<TModel> : ObservableObject, IEnumerable<TModel> {
+        public BaseCollection() {
+            Value = new ObservableCollection<TModel>();
+        }
+
         private int count;
         private ObservableCollection<TModel> value;
 

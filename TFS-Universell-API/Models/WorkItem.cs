@@ -2,8 +2,14 @@
 
     using MyToolkit.Model;
     using Newtonsoft.Json;
+    using System.Threading.Tasks;
 
     public class WorkItem : ObservableObject {
+
+        public WorkItem() {
+            Children = new WorkItemCollection();
+        }
+
         private WorkItemFields fields;
         private int id;
 
@@ -50,6 +56,23 @@
             set {
                 if (url != value) {
                     url = value;
+                    RaisePropertyChanged();
+                }
+            }
+        }
+
+        public async Task GetChildren(TfsClient client) {
+            Children = await client.GetChildren(this.ID);
+        }
+
+        private WorkItemCollection children;
+
+        [JsonIgnore]
+        public WorkItemCollection Children {
+            get { return children; }
+            set {
+                if (children != value) {
+                    children = value;
                     RaisePropertyChanged();
                 }
             }

@@ -1,0 +1,41 @@
+﻿<mt:MtPage
+    x:Class="TFS.Client.Views.StoredQueryPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:TFS.Client.Views"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:mt="using:MyToolkit.Paging"
+    xmlns:controls="using:MyToolkit.Controls"
+    mc:Ignorable="d"
+    Name="view">
+    <mt:MtPage.Resources>
+        <DataTemplate x:Key="DetailsTemplate">
+            <StackPanel Margin="2" Width="200" Height="100" Background="{StaticResource SystemControlBackgroundListLowBrush}">
+                <TextBlock Text="{Binding Fields.Title}" FontWeight="Bold" TextWrapping="Wrap" />
+                <controls:HtmlTextBlock Html="{Binding Fields.Description}"></controls:HtmlTextBlock>
+            </StackPanel>
+        </DataTemplate>
+    </mt:MtPage.Resources>
+    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+        <controls:DataGrid ItemsSource="{Binding ElementName=view, Path=ViewModel.Items}" SelectionChanged="DataGrid_SelectionChanged">
+            <controls:DataGrid.Columns>
+                <controls:DataGridTextColumn Width="80" Header="ID" Binding="{Binding ID}" />
+                <controls:DataGridTextColumn Width="100" Header="Typ" Binding="{Binding Fields.WorkItemType}" />
+                <controls:DataGridTextColumn Width="*" Header="Titel" Binding="{Binding Fields.Title}" />
+                <controls:DataGridTextColumn Width="150" Header="Zustand" Binding="{Binding Fields.State}" />
+                <controls:DataGridTextColumn Width="50" Header="Aufwand" Binding="{Binding Fields.Effort}" />
+                <controls:DataGridTextColumn Width="*" Header="Iterationspfad" Binding="{Binding Fields.IterationPath}" />
+            </controls:DataGrid.Columns>
+            <controls:DataGrid.ItemDetailsTemplate>
+                <DataTemplate>
+                    <StackPanel Margin="12,0,12,12">
+                        <TextBlock Text="{Binding Fields.Title}" FontWeight="Bold" />
+                        <controls:HtmlTextBlock Html="{Binding Fields.Description}"></controls:HtmlTextBlock>
+                        <GridView ItemsSource="{Binding Children}" ItemTemplate="{StaticResource DetailsTemplate}" />
+                    </StackPanel>
+                </DataTemplate>
+            </controls:DataGrid.ItemDetailsTemplate>
+        </controls:DataGrid>
+    </Grid>
+    </mt:MtPage>

@@ -35,7 +35,7 @@ namespace TFS.Client.Views {
 
         private void Grid_ItemClick(object sender, Windows.UI.Xaml.Controls.ItemClickEventArgs e) {
             var project = (e.ClickedItem as TeamProject);
-            App.GetFrame().NavigateAsync(typeof(ProjectOverviewPage));
+            App.GetFrame().NavigateAsync(typeof(ProjectOverviewPage), project.ID);
         }
     }
 }

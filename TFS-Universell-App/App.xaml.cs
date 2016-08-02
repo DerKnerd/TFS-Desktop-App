@@ -34,7 +34,7 @@
         /// </summary>
         public App() {
             this.InitializeComponent();
-            TfsClient = new TfsClient();
+            TfsClient = new TfsClient(string.Empty, string.Empty);
         }
 
         public static Guid SelectedProject { get { return (Guid)ApplicationData.Current.LocalSettings.Values["SelectedProject"]; } }
@@ -55,6 +55,18 @@
             }
         }
 
+        public static PasswordCredential GetCredentialFromLocker() {
+            var credential = default(PasswordCredential);
+            var vault = new PasswordVault();
+            var credentialList = vault.FindAllByResource("TFS.Client");
+            if (credentialList.Count > 0) {
+                if (credentialList.Count == 1) {
+                    credential = credentialList[0];
+                }
+            }
+            return credential;
+        }
+
         public static MtFrame GetFrame() {
             return (Current as App).GetFrame(null);
         }
@@ -63,6 +75,7 @@
             var resourceLoader = ResourceLoader.GetForCurrentView();
             return resourceLoader.GetString(key);
         }
+
         public void AddHamburgerBottomItem(HamburgerItem item) {
             _hamburgerFrameBuilder.Hamburger.BottomItems.Add(item);
         }
@@ -122,6 +135,7 @@
             var item = _hamburgerFrameBuilder.Hamburger.TopItems.SingleOrDefault(predicate);
             _hamburgerFrameBuilder.Hamburger.TopItems.Remove(item);
         }
+
         public void SetHamburgerTopMenu() {
             AddHamburgerTopItem(getSearchHamburgerItem());
         }
@@ -138,6 +152,7 @@
                 Content = "Backlog",
                 ContentIcon = new FontAwesome.UWP.FontAwesome { Icon = FontAwesome.UWP.FontAwesomeIcon.StackOverflow },
                 Icon = new FontAwesome.UWP.FontAwesome { Icon = FontAwesome.UWP.FontAwesomeIcon.StackOverflow },
+                PageType = typeof(BacklogPage)
             });
             AddHamburgerTopItem(new PlaceholderHamburgerItem());
             AddHamburgerTopItem(new PageHamburgerItem {
@@ -153,6 +168,8 @@
                         Content = query.Name,
                         ContentIcon = new FontAwesome.UWP.FontAwesome { Icon = FontAwesome.UWP.FontAwesomeIcon.PlayCircle },
                         Icon = new FontAwesome.UWP.FontAwesome { Icon = FontAwesome.UWP.FontAwesomeIcon.PlayCircle },
+                        PageType = typeof(StoredQueryPage),
+                        PageParameter = query.ID
                     });
                 }
             }
@@ -169,16 +186,27 @@
 
         protected override async void OnWindowCreated(WindowCreatedEventArgs args) {
             base.OnWindowCreated(args);
+            var loginCredential = default(PasswordCredential);
+            var username = string.Empty;
+            var password = string.Empty;
+            var startupDialog = default(StartupDialog);
+            try {
+                loginCredential = GetCredentialFromLocker();
 
-            if (!ApplicationData.Current.LocalSettings.Values.ContainsKey("TFSUrl")) {
-                var logindialog = new LoginDialog();
-                await logindialog.ShowAsync();
+                if (!(loginCredential != null && ApplicationData.Current.LocalSettings.Values.ContainsKey("TFSUrl") && ApplicationData.Current.LocalSettings.Values.ContainsKey("SelectedCollection"))) {
+                    startupDialog = new StartupDialog();
+                    await startupDialog.ShowAsync();
+                }
+            } catch {
+                startupDialog = new StartupDialog();
+                await startupDialog.ShowAsync();
             }
-            if (!ApplicationData.Current.LocalSettings.Values.ContainsKey("SelectedCollection")) {
-                var chooseTeamProject = new SelectTeamProjectCollectionDialog();
-                await chooseTeamProject.ShowAsync();
-            }
-            TfsClient.ReInitialize();
+            loginCredential = GetCredentialFromLocker();
+            loginCredential.RetrievePassword();
+            username = loginCredential.UserName;
+            password = loginCredential.Password;
+
+            TfsClient.ReInitialize(username, password);
             if (!ApplicationData.Current.LocalSettings.Values.ContainsKey("SelectedProject")) {
                 var projects = await TfsClient?.GetProjects(0, 255);
                 if (projects != null) {
@@ -195,7 +223,6 @@
                 GetFrame(null).Navigate(typeof(ListProjectsPage));
             }
         }
-
         private void fillQueryHamburgerItems() {
             var project = ApplicationData.Current.LocalSettings.Values["SelectedProject"]?.ToString();
         }
@@ -229,6 +256,7 @@
             };
             return searchItem;
         }
+
         private PageHamburgerItem getSettingsHamburgerItem() {
             var item = new PageHamburgerItem {
                 Content = GetString("SettingsPageTitle/Text"),
