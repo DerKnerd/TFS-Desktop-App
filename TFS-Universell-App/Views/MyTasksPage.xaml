@@ -6,9 +6,9 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:mt="using:MyToolkit.Paging"
     xmlns:local="using:TFS.Client.UserControls"
-    mc:Ignorable="d">
+    mc:Ignorable="d" Name="view">
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-        <local:TaskTableView></local:TaskTableView>
+        <local:TaskTableView x:Name="Tasks" ViewModel="{Binding ElementName=view, Path=ViewModel}"></local:TaskTableView>
     </Grid>
 </mt:MtPage>

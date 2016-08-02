@@ -15,9 +15,5 @@
     <StackPanel>
         <TextBlock x:Uid="LoginDialogUrl" />
         <TextBox Text="{Binding ViewModel.Url, ElementName=View, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" InputScope="Url" />
-        <TextBlock x:Uid="LoginDialogUsername" />
-        <TextBox Text="{Binding ViewModel.Username, ElementName=View, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" InputScope="EmailNameOrAddress" />
-        <TextBlock x:Uid="LoginDialogPassword" />
-        <PasswordBox Password="{Binding ViewModel.Password, ElementName=View, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
     </StackPanel>
 </ContentDialog>
