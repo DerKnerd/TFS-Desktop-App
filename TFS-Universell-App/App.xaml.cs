@@ -158,7 +158,8 @@
             AddHamburgerTopItem(new PageHamburgerItem {
                 Content = "Aktueller Sprint",
                 ContentIcon = new BitmapIcon { Height = 24, Width = 24, UriSource = new Uri("ms-appx:///Assets/run.png", UriKind.RelativeOrAbsolute) },
-                Icon = new BitmapIcon { Height = 24, Width = 24, UriSource = new Uri("ms-appx:///Assets/run.png", UriKind.RelativeOrAbsolute) }
+                Icon = new BitmapIcon { Height = 24, Width = 24, UriSource = new Uri("ms-appx:///Assets/run.png", UriKind.RelativeOrAbsolute) },
+                PageType = typeof(CurrentSprint)
             });
             fillQueryHamburgerItems();
             AddHamburgerTopItem(new PlaceholderHamburgerItem());

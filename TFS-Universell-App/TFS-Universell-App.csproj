@@ -107,11 +107,15 @@
     <Compile Include="UserControls\TaskTableView.xaml.cs">
       <DependentUpon>TaskTableView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="ViewModels\SprintViewModel.cs" />
     <Compile Include="ViewModels\StartupViewModel.cs" />
     <Compile Include="ViewModels\SettingsViewModel.cs" />
     <Compile Include="ViewModels\TasksViewModel.cs" />
     <Compile Include="Views\BacklogPage.xaml.cs">
       <DependentUpon>BacklogPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\CurrentSprint.xaml.cs">
+      <DependentUpon>CurrentSprint.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\ListProjectsPage.xaml.cs">
       <DependentUpon>ListProjectsPage.xaml</DependentUpon>
@@ -172,6 +176,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Views\BacklogPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\CurrentSprint.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

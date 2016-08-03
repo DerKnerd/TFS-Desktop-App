@@ -1,5 +1,5 @@
 ﻿<mt:MtPage
-    x:Class="TFS.Client.Views.StoredQueryPage"
+    x:Class="TFS.Client.Views.CurrentSprint"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:TFS.Client.Views"
@@ -18,7 +18,7 @@
         </DataTemplate>
     </mt:MtPage.Resources>
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-        <controls:DataGrid ItemsSource="{Binding ElementName=view, Path=ViewModel.Items}" SelectionChanged="DataGrid_SelectionChanged">
+        <controls:DataGrid Name="DataGrid" ItemsSource="{Binding ElementName=view, Path=ViewModel.Items}" SelectionChanged="DataGrid_SelectionChanged">
             <controls:DataGrid.Columns>
                 <controls:DataGridTextColumn Width="80" Header="ID" Binding="{Binding ID}" />
                 <controls:DataGridTextColumn Width="100" Header="Typ" Binding="{Binding Fields.WorkItemType}" />
@@ -32,7 +32,16 @@
                     <StackPanel Margin="12,0,12,12">
                         <TextBlock Text="{Binding Fields.Title}" FontWeight="Bold" />
                         <controls:HtmlTextBlock Html="{Binding Fields.Description}"></controls:HtmlTextBlock>
-                        <GridView ItemsSource="{Binding Children}" ItemTemplate="{StaticResource DetailsTemplate}" />
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition />
+                                <ColumnDefinition />
+                                <ColumnDefinition />
+                            </Grid.ColumnDefinitions>
+                            <GridView CanDragItems="True" AllowDrop="True" ItemsSource="{Binding Planning}" ItemTemplate="{StaticResource DetailsTemplate}" DragOver="GridView_DragOver" DragItemsStarting="GridView_DragItemsStarting" DragEnter="GridView_DragEnter" DragLeave="GridView_DragLeave" Drop="GridView_Drop" />
+                            <GridView Grid.Column="1" CanDragItems="True" ItemsSource="{Binding Active}" AllowDrop="True" ItemTemplate="{StaticResource DetailsTemplate}" DragOver="GridView_DragOver" DragItemsStarting="GridView_DragItemsStarting" DragEnter="GridView_DragEnter" DragLeave="GridView_DragLeave" Drop="GridView_Drop" />
+                            <GridView Grid.Column="2" CanDragItems="True" ItemsSource="{Binding Done}" AllowDrop="True" ItemTemplate="{StaticResource DetailsTemplate}" DragOver="GridView_DragOver" DragItemsStarting="GridView_DragItemsStarting" DragEnter="GridView_DragEnter" DragLeave="GridView_DragLeave" Drop="GridView_Drop" />
+                        </Grid>
                     </StackPanel>
                 </DataTemplate>
             </controls:DataGrid.ItemDetailsTemplate>

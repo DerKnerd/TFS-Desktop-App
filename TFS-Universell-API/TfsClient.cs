@@ -10,8 +10,7 @@
     using System.Threading.Tasks;
     using Windows.Storage;
 
-  public class TfsClient {
-
+    public class TfsClient {
         private string baseUri;
 
         private string password;
@@ -43,6 +42,11 @@
 
         public async Task<WorkItem> GetWorkItem(int id) {
             return await GetAsync<WorkItem>(new Uri($"{getUrl($"wit/WorkItems/{id}&fields=System.Description,Microsoft.VSTS.Scheduling.Effort,System.IterationPath,System.State,System.Title,System.WorkItemType,Microsoft.VSTS.Common.StateCode", "1.0")}", UriKind.RelativeOrAbsolute));
+        }
+
+        public async Task<WorkItemCollection> GetCurrentSprint(Guid project) {
+            var currentSprint = await getCurrentSprintName(project);
+            return await GetWorkItemsByQuery(project, $"SELECT [System.Id] FROM WorkItemLinks WHERE Source.[System.TeamProject] = @project AND Source.[System.State] <> 'Entfernt' AND Source.[System.IterationPath] = '{currentSprint}' AND Source.[System.WorkItemType] = 'Product Backlog Item'");
         }
 
         public async Task<WorkItemCollection> GetBacklogWorkItems(Guid project) {
@@ -97,6 +101,7 @@
             this.username = username;
             this.password = password;
         }
+
         internal async Task<TModel> GetAsync<TModel>(Uri uri) {
             var req = WebRequest.CreateHttp(uri);
             req.Method = "GET";
@@ -143,6 +148,34 @@
                 url = $"{url}?api-version={apiversion}";
             }
             return url;
+        }
+
+        public async Task<WorkItemCollection> GetCurrentSprintActive(Guid project) {
+            var currentSprint = await getCurrentSprintName(project);
+            return await GetWorkItemsByQuery(project, $"SELECT [System.Id] FROM WorkItemLinks WHERE Source.[System.IterationPath] = '{currentSprint}' AND Source.[System.TeamProject] = @project AND Source.[System.State] = 'In Bearbeitung'");
+        }
+
+        public async Task<WorkItemCollection> GetCurrentSprintPlanning(Guid project) {
+            var currentSprint = await getCurrentSprintName(project);
+            return await GetWorkItemsByQuery(project, $"SELECT [System.Id] FROM WorkItemLinks WHERE Source.[System.IterationPath] = '{currentSprint}' AND Source.[System.TeamProject] = @project AND Source.[System.State] = 'Aufgabenplanung'");
+        }
+
+        public async Task<WorkItemCollection> GetCurrentSprintDone(Guid project) {
+            var currentSprint = await getCurrentSprintName(project);
+            return await GetWorkItemsByQuery(project, $"SELECT [System.Id] FROM WorkItemLinks WHERE Source.[System.IterationPath] = '{currentSprint}' AND Source.[System.TeamProject] = @project AND Source.[System.State] = 'Entfernt' OR Source.[System.State] = 'Fertig'");
+        }
+
+        private async Task<string> getCurrentSprintName(Guid project) {
+            var data = await GetAsync<JObject>(new Uri($"{getUrl($"work/teamsettings/iterations", "2.0-preview", project)}", UriKind.RelativeOrAbsolute));
+            var sprints = data["value"];
+            foreach (var sprint in sprints) {
+                var startDate = sprint["attributes"]["startDate"].Value<DateTime>();
+                var finishDate = sprint["attributes"]["finishDate"].Value<DateTime>();
+                if (startDate < DateTime.Now.Date && finishDate > DateTime.Now.Date) {
+                    return sprint["path"].Value<string>();
+                }
+            }
+            return string.Empty;
         }
     }
 }
