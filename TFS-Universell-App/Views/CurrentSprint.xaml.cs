@@ -1,12 +1,13 @@
 ﻿// Die Elementvorlage "Leere Seite" ist unter http://go.microsoft.com/fwlink/?LinkId=234238 dokumentiert.
 
 namespace TFS.Client.Views {
-    using MyToolkit.Input;
+
+    using Dialogs;
     using MyToolkit.Paging;
-    using TFS.API.Models;
-    using TFS.Client.ViewModels;
+    using System;
+    using API.Models;
+    using ViewModels;
     using Windows.ApplicationModel.DataTransfer;
-    using Windows.UI;
     using Windows.UI.Xaml;
     using Windows.UI.Xaml.Controls;
     using Windows.UI.Xaml.Media;
@@ -59,6 +60,19 @@ namespace TFS.Client.Views {
         private async void GridView_Drop(object sender, DragEventArgs e) {
             (sender as GridView).Background = null;
             await (DataGrid.SelectedItem as SprintItemViewModel).LoadCurrentSprint();
+        }
+
+        private async void GridView_ItemClick(object sender, Windows.UI.Xaml.Controls.ItemClickEventArgs e) {
+            var diag = new WorkItemDetailsDialog(e.ClickedItem as WorkItem);
+            diag.Closed += async (s, a) => {
+                if (a.Result == ContentDialogResult.Primary)
+                    await (DataGrid.SelectedItem as SprintItemViewModel).LoadCurrentSprint();
+            };
+            diag.MaxWidth = this.ActualWidth;
+            diag.MinWidth = this.ActualWidth;
+            diag.MaxHeight = this.ActualHeight;
+            diag.MinHeight = this.ActualHeight;
+            await diag.ShowAsync();
         }
     }
 }

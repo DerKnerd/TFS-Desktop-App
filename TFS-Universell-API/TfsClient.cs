@@ -6,6 +6,7 @@
     using System;
     using System.Collections.Generic;
     using System.IO;
+    using System.Linq;
     using System.Net;
     using System.Threading.Tasks;
     using Windows.Storage;
@@ -17,40 +18,45 @@
 
         private string username;
 
+        private readonly string fields = "System.Description,Microsoft.VSTS.Scheduling.Effort,System.IterationPath,System.State,System.Title,System.WorkItemType,Microsoft.VSTS.Common.StateCode,System.AssignedTo,System.AreaPath,System.Reason,Microsoft.VSTS.Common.Priority,Microsoft.VSTS.Scheduling.RemainingWork,Microsoft.VSTS.Common.Activity,Microsoft.VSTS.CMMI.Blocked";
+
         public TfsClient(string username, string password) {
             ReInitialize(username, password);
         }
 
         public string Collection { get; set; }
 
-        internal async Task<WorkItemCollection> GetChildren(int id) {
-            var workitem = await GetAsync<JObject>(new Uri($"{getUrl($"wit/WorkItems/{id}?$expand=relations", "1.0")}", UriKind.RelativeOrAbsolute));
-            var relations = workitem["relations"];
-            var res = new WorkItemCollection();
-            foreach (var item in relations) {
-                if (item["rel"]?.Value<string>() == "System.LinkTypes.Hierarchy-Forward") {
-                    res.Value.Add(await getWorkItem(item["url"].Value<string>()));
-                }
+        public async Task<WorkItemCollection> ExecuteStoredQuery(Guid project, Guid query) {
+            var data = await GetAsync<JObject>(new Uri($"{getUrl($"wit/wiql/{query}", "1.0", project)}", UriKind.RelativeOrAbsolute));
+            var workItems = data["workItems"];
+            var ids = new List<int>();
+            foreach (var item in workItems) {
+                ids.Add(item["id"].Value<int>());
             }
-            res.Count = res.Value.Count;
-            return res;
-        }
-
-        private async Task<WorkItem> getWorkItem(string path) {
-            return await GetAsync<WorkItem>(new Uri($"{path}?fields=System.Description,Microsoft.VSTS.Scheduling.Effort,System.IterationPath,System.State,System.Title,System.WorkItemType,Microsoft.VSTS.Common.StateCode", UriKind.RelativeOrAbsolute));
-        }
-
-        public async Task<WorkItem> GetWorkItem(int id) {
-            return await GetAsync<WorkItem>(new Uri($"{getUrl($"wit/WorkItems/{id}&fields=System.Description,Microsoft.VSTS.Scheduling.Effort,System.IterationPath,System.State,System.Title,System.WorkItemType,Microsoft.VSTS.Common.StateCode", "1.0")}", UriKind.RelativeOrAbsolute));
-        }
-
-        public async Task<WorkItemCollection> GetCurrentSprint(Guid project) {
-            var currentSprint = await getCurrentSprintName(project);
-            return await GetWorkItemsByQuery(project, $"SELECT [System.Id] FROM WorkItemLinks WHERE Source.[System.TeamProject] = @project AND Source.[System.State] <> 'Entfernt' AND Source.[System.IterationPath] = '{currentSprint}' AND Source.[System.WorkItemType] = 'Product Backlog Item'");
+            if (ids.Any())
+                return await GetWorkItemsByIds(ids);
+            else
+                return new WorkItemCollection();
         }
 
         public async Task<WorkItemCollection> GetBacklogWorkItems(Guid project) {
             return await GetWorkItemsByQuery(project, $"SELECT [System.Id] FROM WorkItemLinks WHERE Source.[System.TeamProject] = @project AND Source.[System.State] <> 'Fertig' AND Source.[System.State] <> 'Geschlossen' AND Source.[System.State] <> 'Entfernt' AND Source.[System.WorkItemType] = 'Product Backlog Item'");
+        }
+
+        public async Task<WorkItemCollection> GetCurrentSprint(Guid project) {
+            return await GetWorkItemsByQuery(project, $"SELECT [System.Id] FROM WorkItemLinks WHERE Source.[System.TeamProject] = @project AND Source.[System.State] <> 'Entfernt' AND Source.[System.IterationPath] = @CurrentIteration AND Source.[System.WorkItemType] = 'Product Backlog Item'");
+        }
+
+        public async Task<WorkItemCollection> GetCurrentSprintActive(Guid project, int workitemId) {
+            return await GetSprintWorkItemsByQuery(project, workitemId, "In Bearbeitung");
+        }
+
+        public async Task<WorkItemCollection> GetCurrentSprintDone(Guid project, int workitemId) {
+            return await GetSprintWorkItemsByQuery(project, workitemId, "Fertig");
+        }
+
+        public async Task<WorkItemCollection> GetCurrentSprintPlanning(Guid project, int workitemId) {
+            return await GetSprintWorkItemsByQuery(project, workitemId, "Aufgabenplanung");
         }
 
         public async Task<WorkItemCollection> GetMyWorkItems(Guid project) {
@@ -69,18 +75,27 @@
             return await GetAsync<QueryCollection>(new Uri($"{getUrl($"wit/queries?$depth=2", "2.0", project)}", UriKind.RelativeOrAbsolute));
         }
 
-        public async Task<WorkItemCollection> ExecuteStoredQuery(Guid project, Guid query) {
-            var data = await GetAsync<JObject>(new Uri($"{getUrl($"wit/wiql/{query}", "1.0", project)}", UriKind.RelativeOrAbsolute));
-            var workItems = data["workItems"];
-            var ids = new List<int>();
-            foreach (var item in workItems) {
-                ids.Add(item["id"].Value<int>());
-            }
-            return await GetWorkItemsByIds(ids);
+        public async Task<WorkItem> GetWorkItem(int id) {
+            return await getWorkItem($"{getUrl($"wit/WorkItems/{id}", "1.0")}");
         }
 
         public async Task<WorkItemCollection> GetWorkItemsByIds(List<int> ids) {
-            return await GetAsync<WorkItemCollection>(new Uri($"{getUrl($"wit/WorkItems?ids={string.Join(",", ids)}&fields=System.Description,Microsoft.VSTS.Scheduling.Effort,System.IterationPath,System.State,System.Title,System.WorkItemType,Microsoft.VSTS.Common.StateCode", "1.0")}", UriKind.RelativeOrAbsolute));
+            return await GetAsync<WorkItemCollection>(new Uri($"{getUrl($"wit/WorkItems?ids={string.Join(",", ids)}&fields={fields}", "1.0")}", UriKind.RelativeOrAbsolute));
+        }
+
+        public async Task<WorkItemCollection> GetSprintWorkItemsByQuery(Guid project, int workitemId, string state) {
+            var data = await GetAsync<JObject>(new Uri($"{getUrl($"wit/WorkItems/{workitemId}?$expand=relations", "1.0")}"));
+            var relations = data["relations"];
+            var result = new WorkItemCollection();
+            foreach (var item in relations) {
+                if (item["rel"]?.Value<string>() == "System.LinkTypes.Hierarchy-Forward") {
+                    var workitem = await getWorkItem($"{item["url"].Value<string>()}");
+                    if (workitem.Fields.State == state) {
+                        result.Value.Add(workitem);
+                    }
+                }
+            }
+            return result;
         }
 
         public async Task<WorkItemCollection> GetWorkItemsByQuery(Guid project, string wiql) {
@@ -92,7 +107,10 @@
                     ids.Add(item["target"]["id"].Value<int>());
                 }
             }
-            return await GetWorkItemsByIds(ids);
+            if (ids.Any())
+                return await GetWorkItemsByIds(ids);
+            else
+                return new WorkItemCollection();
         }
 
         public void ReInitialize(string username, string password) {
@@ -112,6 +130,19 @@
             }
         }
 
+        internal async Task<WorkItemCollection> GetChildren(int id) {
+            var workitem = await GetAsync<JObject>(new Uri($"{getUrl($"wit/WorkItems/{id}?$expand=relations", "1.0")}", UriKind.RelativeOrAbsolute));
+            var relations = workitem["relations"];
+            var res = new WorkItemCollection();
+            foreach (var item in relations) {
+                if (item["rel"]?.Value<string>() == "System.LinkTypes.Hierarchy-Forward") {
+                    res.Value.Add(await getWorkItem(item["url"].Value<string>()));
+                }
+            }
+            res.Count = res.Value.Count;
+            return res;
+        }
+
         internal async Task<TModel> PostAsync<TModel>(Uri uri, object body) {
             var req = WebRequest.CreateHttp(uri);
             req.Method = "POST";
@@ -128,6 +159,15 @@
             using (var sr = new StreamReader(res.GetResponseStream())) {
                 return JsonConvert.DeserializeObject<TModel>(await sr.ReadToEndAsync());
             }
+        }
+
+        private async Task<string> getCurrentSprintName(Guid project) {
+            var data = await GetAsync<JObject>(new Uri($"{getUrl($"work/teamsettings/iterations?$timeframe=current", "2.0-preview", project)}", UriKind.RelativeOrAbsolute));
+            var sprints = data["value"];
+            foreach (var sprint in sprints) {
+                return sprint["path"].Value<string>();
+            }
+            return string.Empty;
         }
 
         private string getUrl(string path, string apiversion) {
@@ -150,32 +190,11 @@
             return url;
         }
 
-        public async Task<WorkItemCollection> GetCurrentSprintActive(Guid project) {
-            var currentSprint = await getCurrentSprintName(project);
-            return await GetWorkItemsByQuery(project, $"SELECT [System.Id] FROM WorkItemLinks WHERE Source.[System.IterationPath] = '{currentSprint}' AND Source.[System.TeamProject] = @project AND Source.[System.State] = 'In Bearbeitung'");
-        }
-
-        public async Task<WorkItemCollection> GetCurrentSprintPlanning(Guid project) {
-            var currentSprint = await getCurrentSprintName(project);
-            return await GetWorkItemsByQuery(project, $"SELECT [System.Id] FROM WorkItemLinks WHERE Source.[System.IterationPath] = '{currentSprint}' AND Source.[System.TeamProject] = @project AND Source.[System.State] = 'Aufgabenplanung'");
-        }
-
-        public async Task<WorkItemCollection> GetCurrentSprintDone(Guid project) {
-            var currentSprint = await getCurrentSprintName(project);
-            return await GetWorkItemsByQuery(project, $"SELECT [System.Id] FROM WorkItemLinks WHERE Source.[System.IterationPath] = '{currentSprint}' AND Source.[System.TeamProject] = @project AND Source.[System.State] = 'Entfernt' OR Source.[System.State] = 'Fertig'");
-        }
-
-        private async Task<string> getCurrentSprintName(Guid project) {
-            var data = await GetAsync<JObject>(new Uri($"{getUrl($"work/teamsettings/iterations", "2.0-preview", project)}", UriKind.RelativeOrAbsolute));
-            var sprints = data["value"];
-            foreach (var sprint in sprints) {
-                var startDate = sprint["attributes"]["startDate"].Value<DateTime>();
-                var finishDate = sprint["attributes"]["finishDate"].Value<DateTime>();
-                if (startDate < DateTime.Now.Date && finishDate > DateTime.Now.Date) {
-                    return sprint["path"].Value<string>();
-                }
-            }
-            return string.Empty;
+        private async Task<WorkItem> getWorkItem(string path) {
+            if (path.Contains("?"))
+                return await GetAsync<WorkItem>(new Uri($"{path}&fields={fields}", UriKind.RelativeOrAbsolute));
+            else
+                return await GetAsync<WorkItem>(new Uri($"{path}?fields={fields}", UriKind.RelativeOrAbsolute));
         }
     }
 }

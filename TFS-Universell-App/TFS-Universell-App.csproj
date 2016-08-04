@@ -99,6 +99,9 @@
     <Compile Include="Dialogs\StartupDialog.xaml.cs">
       <DependentUpon>StartupDialog.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Dialogs\WorkItemDetailsDialog.xaml.cs">
+      <DependentUpon>WorkItemDetailsDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="UserControls\HamburgerHeader.xaml.cs">
       <DependentUpon>HamburgerHeader.xaml</DependentUpon>
@@ -164,6 +167,10 @@
   </ItemGroup>
   <ItemGroup>
     <Page Include="Dialogs\StartupDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Dialogs\WorkItemDetailsDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

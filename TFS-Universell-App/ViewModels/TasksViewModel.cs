@@ -10,17 +10,17 @@
 
         public async static Task<TasksViewModel> GetMyTasksViewModel() {
             var tasks = await App.TfsClient.GetMyWorkItems(App.SelectedProject);
-            return new TasksViewModel { Items = tasks.Value.ToArray() };
+            return new TasksViewModel { Items = tasks.Value?.ToArray() };
         }
 
         public async static Task<TasksViewModel> GetBacklogTasksViewModel() {
             var tasks = await App.TfsClient.GetBacklogWorkItems(App.SelectedProject);
-            return new TasksViewModel { Items = tasks.Value.ToArray() };
+            return new TasksViewModel { Items = tasks.Value?.ToArray() };
         }
 
         public async static Task<TasksViewModel> ExecuteStoredQuery(Guid query) {
             var tasks = await App.TfsClient.ExecuteStoredQuery(App.SelectedProject, query);
-            return new TasksViewModel { Items = tasks.Value.ToArray() };
+            return new TasksViewModel { Items = tasks.Value?.ToArray() };
         }
 
         private WorkItem[] items;

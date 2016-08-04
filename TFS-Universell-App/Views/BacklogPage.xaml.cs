@@ -2,10 +2,13 @@
 
 namespace TFS.Client.Views {
 
+    using System;
     using API.Models;
     using MyToolkit.Paging;
     using ViewModels;
     using Windows.UI.Xaml;
+    using Dialogs;
+    using Windows.UI.Xaml.Controls;
 
     /// <summary>
     /// Eine leere Seite, die eigenständig verwendet oder zu der innerhalb eines Rahmens navigiert werden kann.
@@ -34,6 +37,19 @@ namespace TFS.Client.Views {
             foreach (var item in e.AddedItems) {
                 await (item as WorkItem).GetChildren(App.TfsClient);
             }
+        }
+
+        private async void GridView_ItemClick(object sender, Windows.UI.Xaml.Controls.ItemClickEventArgs e) {
+            var diag = new WorkItemDetailsDialog(e.ClickedItem as WorkItem);
+            diag.Closed += async (s, a) => {
+                if (a.Result == ContentDialogResult.Primary)
+                    this.ViewModel = await TasksViewModel.GetBacklogTasksViewModel();
+            };
+            diag.MaxWidth = this.ActualWidth;
+            diag.MinWidth = this.ActualWidth;
+            diag.MaxHeight = this.ActualHeight;
+            diag.MinHeight = this.ActualHeight;
+            await diag.ShowAsync();
         }
     }
 }

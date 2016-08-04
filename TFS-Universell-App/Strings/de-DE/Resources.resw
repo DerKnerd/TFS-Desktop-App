@@ -150,4 +150,13 @@
   <data name="StartupDialogUrl.Text" xml:space="preserve">
     <value>TFS Adresse</value>
   </data>
+  <data name="WorkItemDetailsDialog.PrimaryButtonText" xml:space="preserve">
+    <value>Speichern und Schließen</value>
+  </data>
+  <data name="WorkItemDetailsDialog.SecondaryButtonText" xml:space="preserve">
+    <value>Schließen</value>
+  </data>
+  <data name="WorkItemDetailsDialogDescription.Text" xml:space="preserve">
+    <value>Beschreibung</value>
+  </data>
 </root>

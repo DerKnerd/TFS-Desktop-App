@@ -5,9 +5,20 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Reflection;
     using System.Threading.Tasks;
 
     public class SprintItemViewModel : WorkItem {
+
+        public static SprintItemViewModel FromWorkItem(WorkItem item) {
+            var result = new SprintItemViewModel();
+            var typeofSprintItem = typeof(SprintItemViewModel);
+            var typeofWorkItem = typeof(WorkItem);
+            foreach (var prop in typeofWorkItem.GetProperties()) {
+                typeofSprintItem.GetProperty(prop.Name).SetValue(result, prop.GetValue(item));
+            }
+            return result;
+        }
 
         private WorkItem[] active;
 
@@ -46,9 +57,9 @@
         }
 
         public async Task LoadCurrentSprint() {
-            this.Active = (await App.TfsClient.GetCurrentSprintActive(App.SelectedProject)).Value.ToArray();
-            this.Done = (await App.TfsClient.GetCurrentSprintDone(App.SelectedProject)).Value.ToArray();
-            this.Planning = (await App.TfsClient.GetCurrentSprintPlanning(App.SelectedProject)).Value.ToArray();
+            this.Active = (await App.TfsClient.GetCurrentSprintActive(App.SelectedProject, this.ID)).Value.ToArray();
+            this.Done = (await App.TfsClient.GetCurrentSprintDone(App.SelectedProject, this.ID)).Value.ToArray();
+            this.Planning = (await App.TfsClient.GetCurrentSprintPlanning(App.SelectedProject, this.ID)).Value.ToArray();
         }
     }
 
@@ -58,7 +69,7 @@
             var tasks = await App.TfsClient.GetCurrentSprint(App.SelectedProject);
             var items = new List<SprintItemViewModel>();
             foreach (var item in tasks) {
-                items.Add(Convert.ChangeType(item, typeof(SprintItemViewModel)) as SprintItemViewModel);
+                items.Add(SprintItemViewModel.FromWorkItem(item));
             }
             return new SprintViewModel { Items = items.ToArray() };
         }

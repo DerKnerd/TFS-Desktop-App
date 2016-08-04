@@ -1,0 +1,138 @@
+﻿<ContentDialog
+    x:Class="TFS.Client.Dialogs.WorkItemDetailsDialog"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:TFS.Client.Dialogs"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Name="view"
+    x:Uid="WorkItemDetailsDialog"
+    PrimaryButtonText="Button1"
+    SecondaryButtonText="Button2"
+    PrimaryButtonClick="ContentDialog_PrimaryButtonClick"
+    SecondaryButtonClick="ContentDialog_SecondaryButtonClick">
+    <ContentDialog.Template>
+        <ControlTemplate TargetType="ContentDialog">
+            <Border x:Name="Container">
+                <Grid x:Name="LayoutRoot">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <Border x:Name="BackgroundElement" Background="{TemplateBinding Background}" FlowDirection="{TemplateBinding FlowDirection}" BorderThickness="{ThemeResource ContentDialogBorderWidth}" BorderBrush="{ThemeResource SystemControlForegroundAccentBrush}" MaxWidth="{TemplateBinding MaxWidth}" MaxHeight="{TemplateBinding MaxHeight}" MinWidth="{TemplateBinding MinWidth}" MinHeight="{TemplateBinding MinHeight}">
+                        <Grid x:Name="DialogSpace" VerticalAlignment="Stretch">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+                            <ScrollViewer x:Name="ContentScrollViewer" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Disabled" ZoomMode="Disabled" Margin="{ThemeResource ContentDialogContentScrollViewerMargin}" IsTabStop="False">
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                    </Grid.RowDefinitions>
+                                    <ContentControl x:Name="Title" Margin="{ThemeResource ContentDialogTitleMargin}" Content="{TemplateBinding Title}" ContentTemplate="{TemplateBinding TitleTemplate}" FontSize="20" FontFamily="XamlAutoFontFamily" FontWeight="Normal" Foreground="{TemplateBinding Foreground}" HorizontalAlignment="Left" VerticalAlignment="Top" IsTabStop="False" MaxHeight="{ThemeResource ContentDialogTitleMaxHeight}">
+                                        <ContentControl.Template>
+                                            <ControlTemplate TargetType="ContentControl">
+                                                <ContentPresenter Content="{TemplateBinding Content}" MaxLines="2" TextWrapping="Wrap" ContentTemplate="{TemplateBinding ContentTemplate}" Margin="{TemplateBinding Padding}" ContentTransitions="{TemplateBinding ContentTransitions}" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
+                                            </ControlTemplate>
+                                        </ContentControl.Template>
+                                    </ContentControl>
+                                    <ContentPresenter x:Name="Content" ContentTemplate="{TemplateBinding ContentTemplate}" Content="{TemplateBinding Content}" FontSize="{ThemeResource ControlContentThemeFontSize}" FontFamily="{ThemeResource ContentControlThemeFontFamily}" Margin="{ThemeResource ContentDialogContentMargin}" Foreground="{TemplateBinding Foreground}" Grid.Row="1" TextWrapping="Wrap" />
+                                </Grid>
+                            </ScrollViewer>
+                            <Grid x:Name="CommandSpace" Grid.Row="1" HorizontalAlignment="Right" VerticalAlignment="Bottom">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition />
+                                    <ColumnDefinition />
+                                </Grid.ColumnDefinitions>
+                                <Border x:Name="Button1Host" Margin="{ThemeResource ContentDialogButton1HostMargin}" MinWidth="{ThemeResource ContentDialogButtonMinWidth}" MaxWidth="{ThemeResource ContentDialogButtonMaxWidth}" Height="{ThemeResource ContentDialogButtonHeight}" HorizontalAlignment="Stretch" />
+                                <Border x:Name="Button2Host" Margin="{ThemeResource ContentDialogButton2HostMargin}" MinWidth="{ThemeResource ContentDialogButtonMinWidth}" MaxWidth="{ThemeResource ContentDialogButtonMaxWidth}" Height="{ThemeResource ContentDialogButtonHeight}" Grid.Column="1" HorizontalAlignment="Stretch" />
+                            </Grid>
+                        </Grid>
+                    </Border>
+                </Grid>
+            </Border>
+        </ControlTemplate>
+    </ContentDialog.Template>
+    <ContentDialog.TitleTemplate>
+        <DataTemplate>
+            <TextBlock><Run Text="{Binding ElementName=view, Path=Model.Fields.WorkItemType}" /> <Run Text="{Binding ElementName=view, Path=Model.ID}" />: <Run Text="{Binding ElementName=view, Path=Model.Fields.Title}" /></TextBlock>
+        </DataTemplate>
+    </ContentDialog.TitleTemplate>
+    <ContentDialog.Resources>
+        <Style TargetType="TextBox">
+            <Setter Property="Margin" Value="2.5" />
+        </Style>
+    </ContentDialog.Resources>
+    <StackPanel>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="9*" />
+                <ColumnDefinition Width="1*" />
+            </Grid.ColumnDefinitions>
+            <TextBox Text="{Binding ElementName=view, Path=Model.Fields.Title}"></TextBox>
+            <TextBox Grid.Column="1" Text="{Binding ElementName=view, Path=Model.ID}" IsReadOnly="True"></TextBox>
+        </Grid>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition />
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition />
+                <RowDefinition />
+            </Grid.RowDefinitions>
+            <TextBlock Typography.Capitals="SmallCaps"><Bold>Status</Bold></TextBlock>
+            <TextBlock Grid.Column="1" Typography.Capitals="SmallCaps"><Bold>Details</Bold></TextBlock>
+            <Grid Grid.Row="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="2*" />
+                    <ColumnDefinition Width="8*" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <TextBlock>Zugewiesen an:</TextBlock>
+                <TextBox Grid.Column="1" Text="{Binding ElementName=view, Path=Model.Fields.AssignedTo}"></TextBox>
+                <TextBlock Grid.Row="1">Status:</TextBlock>
+                <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding ElementName=view, Path=Model.Fields.State}"></TextBox>
+                <TextBlock Grid.Row="2">Bereich:</TextBlock>
+                <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding ElementName=view, Path=Model.Fields.AreaPath}"></TextBox>
+                <TextBlock Grid.Row="3">Grund:</TextBlock>
+                <TextBox Grid.Row="3" Grid.Column="1" Text="{Binding ElementName=view, Path=Model.Fields.Reason}"></TextBox>
+            </Grid>
+            <Grid Grid.Row="1" Grid.Column="1">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="2*" />
+                        <ColumnDefinition Width="8*" />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <TextBlock>Priorität:</TextBlock>
+                    <TextBox Grid.Column="1" Text="{Binding ElementName=view, Path=Model.Fields.Priority}"></TextBox>
+                    <TextBlock Grid.Row="1">Verbleibende Arbeit:</TextBlock>
+                    <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding ElementName=view, Path=Model.Fields.RemainingWork}"></TextBox>
+                    <TextBlock Grid.Row="2">Aktivität:</TextBlock>
+                    <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding ElementName=view, Path=Model.Fields.Activity}"></TextBox>
+                    <TextBlock Grid.Row="3">Blockiert:</TextBlock>
+                    <TextBox Grid.Row="3" Grid.Column="1" Text="{Binding ElementName=view, Path=Model.Fields.Blocked}"></TextBox>
+                </Grid>
+            </Grid>
+        </Grid>
+        <TextBlock x:Uid="WorkItemDetailsDialogDescription"></TextBlock>
+        <TextBox Text="{Binding ElementName=view, Path=Model.Fields.Description}" AcceptsReturn="True" Height="300"></TextBox>
+    </StackPanel>
+</ContentDialog>

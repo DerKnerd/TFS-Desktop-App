@@ -10,7 +10,7 @@
     Name="view">
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-        <GridView Name="Grid" ItemClick="Grid_ItemClick">
+        <GridView Name="Grid" ItemClick="Grid_ItemClick" IsItemClickEnabled="True">
             <GridView.ItemTemplate>
                 <DataTemplate>
                     <StackPanel Orientation="Vertical" Width="204" Height="100" Margin="2" Padding="5" Background="{StaticResource SystemControlBackgroundAccentBrush}">

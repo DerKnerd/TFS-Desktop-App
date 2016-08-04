@@ -13,6 +13,7 @@
         <DataTemplate x:Key="DetailsTemplate">
             <StackPanel Margin="2" Width="200" Height="100" Background="{StaticResource SystemControlBackgroundListLowBrush}">
                 <TextBlock Text="{Binding Fields.Title}" FontWeight="Bold" TextWrapping="Wrap" />
+                <TextBlock Text="{Binding Fields.AssignedTo}"></TextBlock>
                 <controls:HtmlTextBlock Html="{Binding Fields.Description}"></controls:HtmlTextBlock>
             </StackPanel>
         </DataTemplate>
@@ -38,9 +39,9 @@
                                 <ColumnDefinition />
                                 <ColumnDefinition />
                             </Grid.ColumnDefinitions>
-                            <GridView CanDragItems="True" AllowDrop="True" ItemsSource="{Binding Planning}" ItemTemplate="{StaticResource DetailsTemplate}" DragOver="GridView_DragOver" DragItemsStarting="GridView_DragItemsStarting" DragEnter="GridView_DragEnter" DragLeave="GridView_DragLeave" Drop="GridView_Drop" />
-                            <GridView Grid.Column="1" CanDragItems="True" ItemsSource="{Binding Active}" AllowDrop="True" ItemTemplate="{StaticResource DetailsTemplate}" DragOver="GridView_DragOver" DragItemsStarting="GridView_DragItemsStarting" DragEnter="GridView_DragEnter" DragLeave="GridView_DragLeave" Drop="GridView_Drop" />
-                            <GridView Grid.Column="2" CanDragItems="True" ItemsSource="{Binding Done}" AllowDrop="True" ItemTemplate="{StaticResource DetailsTemplate}" DragOver="GridView_DragOver" DragItemsStarting="GridView_DragItemsStarting" DragEnter="GridView_DragEnter" DragLeave="GridView_DragLeave" Drop="GridView_Drop" />
+                            <GridView IsItemClickEnabled="True" IsRightTapEnabled="True" ItemClick="GridView_ItemClick" CanDragItems="True" AllowDrop="True" ItemsSource="{Binding Planning}" ItemTemplate="{StaticResource DetailsTemplate}" DragOver="GridView_DragOver" DragItemsStarting="GridView_DragItemsStarting" DragEnter="GridView_DragEnter" DragLeave="GridView_DragLeave" Drop="GridView_Drop" />
+                            <GridView IsItemClickEnabled="True" IsRightTapEnabled="True" ItemClick="GridView_ItemClick" Grid.Column="1" CanDragItems="True" ItemsSource="{Binding Active}" AllowDrop="True" ItemTemplate="{StaticResource DetailsTemplate}" DragOver="GridView_DragOver" DragItemsStarting="GridView_DragItemsStarting" DragEnter="GridView_DragEnter" DragLeave="GridView_DragLeave" Drop="GridView_Drop" />
+                            <GridView IsItemClickEnabled="True" IsRightTapEnabled="True" ItemClick="GridView_ItemClick" Grid.Column="2" CanDragItems="True" ItemsSource="{Binding Done}" AllowDrop="True" ItemTemplate="{StaticResource DetailsTemplate}" DragOver="GridView_DragOver" DragItemsStarting="GridView_DragItemsStarting" DragEnter="GridView_DragEnter" DragLeave="GridView_DragLeave" Drop="GridView_Drop" />
                         </Grid>
                     </StackPanel>
                 </DataTemplate>

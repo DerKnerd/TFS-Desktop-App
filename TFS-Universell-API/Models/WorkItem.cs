@@ -5,17 +5,30 @@
     using System.Threading.Tasks;
 
     public class WorkItem : ObservableObject {
-
-        public WorkItem() {
-            Children = new WorkItemCollection();
-        }
+        private WorkItemCollection children;
 
         private WorkItemFields fields;
+
         private int id;
 
         private int revision;
 
         private string url;
+
+        public WorkItem() {
+            Children = new WorkItemCollection();
+        }
+
+        [JsonIgnore]
+        public WorkItemCollection Children {
+            get { return children; }
+            set {
+                if (children != value) {
+                    children = value;
+                    RaisePropertyChanged();
+                }
+            }
+        }
 
         [JsonProperty("fields")]
         public WorkItemFields Fields {
@@ -64,36 +77,72 @@
         public async Task GetChildren(TfsClient client) {
             Children = await client.GetChildren(this.ID);
         }
-
-        private WorkItemCollection children;
-
-        [JsonIgnore]
-        public WorkItemCollection Children {
-            get { return children; }
-            set {
-                if (children != value) {
-                    children = value;
-                    RaisePropertyChanged();
-                }
-            }
-        }
     }
 
     public class WorkItemCollection : BaseCollection<WorkItem> { }
 
     [JsonObject]
     public class WorkItemFields : ObservableObject {
+        private string activity;
+        private string areaPath;
+        private string assignedTo;
+        private string blocked;
         private string description;
         private float effort;
         private string iterationPath;
 
+        private int priority;
+        private string reason;
+        private double remainingWork;
         private string state;
 
         private int stateCode;
         private string title;
 
         private string workItemType;
+        [JsonProperty("Microsoft.VSTS.Common.Activity")]
+        public string Activity {
+            get { return activity; }
+            set {
+                if (activity != value) {
+                    activity = value;
+                    RaisePropertyChanged();
+                }
+            }
+        }
 
+        [JsonProperty("System.AreaPath")]
+        public string AreaPath {
+            get { return areaPath; }
+            set {
+                if (areaPath != value) {
+                    areaPath = value;
+                    RaisePropertyChanged();
+                }
+            }
+        }
+
+        [JsonProperty("System.AssignedTo")]
+        public string AssignedTo {
+            get { return assignedTo; }
+            set {
+                if (assignedTo != value) {
+                    assignedTo = value;
+                    RaisePropertyChanged();
+                }
+            }
+        }
+
+        [JsonProperty("Microsoft.VSTS.CMMI.Blocked")]
+        public string Blocked {
+            get { return blocked; }
+            set {
+                if (blocked != value) {
+                    blocked = value;
+                    RaisePropertyChanged();
+                }
+            }
+        }
         [JsonProperty("System.Description")]
         public string Description {
             get { return description; }
@@ -127,6 +176,38 @@
             }
         }
 
+        [JsonProperty("Microsoft.VSTS.Common.Priority")]
+        public int Priority {
+            get { return priority; }
+            set {
+                if (priority != value) {
+                    priority = value;
+                    RaisePropertyChanged();
+                }
+            }
+        }
+
+        [JsonProperty("System.Reason")]
+        public string Reason {
+            get { return reason; }
+            set {
+                if (reason != value) {
+                    reason = value;
+                    RaisePropertyChanged();
+                }
+            }
+        }
+
+        [JsonProperty("Microsoft.VSTS.Scheduling.RemainingWork")]
+        public double RemainingWork {
+            get { return remainingWork; }
+            set {
+                if (remainingWork != value) {
+                    remainingWork = value;
+                    RaisePropertyChanged();
+                }
+            }
+        }
         [JsonProperty("System.State")]
         public string State {
             get { return state; }

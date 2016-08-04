@@ -170,7 +170,8 @@
                         ContentIcon = new FontAwesome.UWP.FontAwesome { Icon = FontAwesome.UWP.FontAwesomeIcon.PlayCircle },
                         Icon = new FontAwesome.UWP.FontAwesome { Icon = FontAwesome.UWP.FontAwesomeIcon.PlayCircle },
                         PageType = typeof(StoredQueryPage),
-                        PageParameter = query.ID
+                        PageParameter = query.ID,
+                        UseSinglePageInstance = false
                     });
                 }
             }
