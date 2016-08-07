@@ -51,5 +51,24 @@ namespace TFS.Client.Views {
             diag.MinHeight = this.ActualHeight;
             await diag.ShowAsync();
         }
+
+        private async void Item_RightTapped(object sender, Windows.UI.Xaml.Input.RightTappedRoutedEventArgs e) {
+            if (DataGrid.SelectedItem is SprintItemViewModel) {
+                var popup = new PopupMenu();
+                popup.Commands.Add(new UICommand(App.GetString("Details"), async (args) => {
+                    var diag = new WorkItemDetailsDialog(DataGrid.SelectedItem as WorkItem);
+                    diag.Closed += async (s, a) => {
+                        if (a.Result == ContentDialogResult.Primary)
+                            ViewModel = await SprintViewModel.GetCurrentSprint();
+                    };
+                    diag.MaxWidth = this.ActualWidth;
+                    diag.MinWidth = this.ActualWidth;
+                    diag.MaxHeight = this.ActualHeight;
+                    diag.MinHeight = this.ActualHeight;
+                    await diag.ShowAsync();
+                }));
+                await popup.ShowForSelectionAsync(new Rect(App.GetPointerPosition(), new Size(1, 1)));
+            }
+        }
     }
 }

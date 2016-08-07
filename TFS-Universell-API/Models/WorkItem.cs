@@ -2,6 +2,9 @@
 
     using MyToolkit.Model;
     using Newtonsoft.Json;
+    using System.Collections.Generic;
+    using System.ComponentModel;
+    using System.Reflection;
     using System.Threading.Tasks;
 
     public class WorkItem : ObservableObject {
@@ -77,29 +80,49 @@
         public async Task GetChildren(TfsClient client) {
             Children = await client.GetChildren(this.ID);
         }
+
+        public async Task SaveChanges(TfsClient client) {
+            await client.UpdateWorkItem(this);
+        }
     }
 
     public class WorkItemCollection : BaseCollection<WorkItem> { }
 
     [JsonObject]
     public class WorkItemFields : ObservableObject {
+
         private string activity;
+
         private string areaPath;
+
         private string assignedTo;
+
         private string blocked;
+
         private string description;
+
         private float effort;
+
         private string iterationPath;
 
         private int priority;
+
         private string reason;
+
         private double remainingWork;
+
         private string state;
 
         private int stateCode;
+
         private string title;
 
         private string workItemType;
+
+        public WorkItemFields() {
+            OriginalValue = new Dictionary<string, object>();
+        }
+
         [JsonProperty("Microsoft.VSTS.Common.Activity")]
         public string Activity {
             get { return activity; }
@@ -143,6 +166,7 @@
                 }
             }
         }
+
         [JsonProperty("System.Description")]
         public string Description {
             get { return description; }
@@ -176,6 +200,9 @@
             }
         }
 
+        [JsonIgnore]
+        public Dictionary<string, object> OriginalValue { get; set; }
+
         [JsonProperty("Microsoft.VSTS.Common.Priority")]
         public int Priority {
             get { return priority; }
@@ -208,6 +235,7 @@
                 }
             }
         }
+
         [JsonProperty("System.State")]
         public string State {
             get { return state; }
@@ -249,6 +277,13 @@
                     workItemType = value;
                     RaisePropertyChanged();
                 }
+            }
+        }
+
+        protected override void RaisePropertyChanged(PropertyChangedEventArgs args) {
+            base.RaisePropertyChanged(args);
+            if (!OriginalValue.ContainsKey(args.PropertyName)) {
+                OriginalValue.Add(args.PropertyName, this.GetType().GetProperty(args.PropertyName).GetValue(this));
             }
         }
     }

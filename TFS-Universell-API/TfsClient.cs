@@ -8,6 +8,7 @@
     using System.IO;
     using System.Linq;
     using System.Net;
+    using System.Reflection;
     using System.Threading.Tasks;
     using Windows.Storage;
 
@@ -37,6 +38,26 @@
                 return await GetWorkItemsByIds(ids);
             else
                 return new WorkItemCollection();
+        }
+
+        public async Task UpdateWorkItem(WorkItem workitem) {
+            var items = new List<dynamic>();
+            foreach (var item in workitem.Fields.GetType().GetProperties().Where(p => p.GetCustomAttribute<JsonIgnoreAttribute>() == null)) {
+                var action = "replace";
+                if (!workitem.Fields.OriginalValue.ContainsKey(item.Name) && item.GetValue(workitem.Fields) != null) {
+                    action = "add";
+                } else if (!workitem.Fields.OriginalValue.ContainsKey(item.Name) && item.GetValue(workitem.Fields) == null) {
+                    continue;
+                } else if (!workitem.Fields.OriginalValue.ContainsKey(item.Name) && item.GetValue(workitem.Fields) == workitem.Fields.OriginalValue[item.Name]) {
+                    continue;
+                }
+                items.Add(new {
+                    op = action,
+                    value = item.GetValue(workitem.Fields),
+                    path = item.GetCustomAttribute<JsonPropertyAttribute>().PropertyName
+                });
+            }
+            await PatchAsync<dynamic>(new Uri($"{getUrl($"wit/workitems/{workitem.ID}", "1.0")}", UriKind.RelativeOrAbsolute), items);
         }
 
         public async Task<WorkItemCollection> GetBacklogWorkItems(Guid project) {
@@ -146,6 +167,24 @@
         internal async Task<TModel> PostAsync<TModel>(Uri uri, object body) {
             var req = WebRequest.CreateHttp(uri);
             req.Method = "POST";
+            req.Credentials = new NetworkCredential(username, password);
+
+            if (body != null) {
+                req.ContentType = "application/json";
+                using (var sw = new StreamWriter(await req.GetRequestStreamAsync())) {
+                    await sw.WriteAsync(JsonConvert.SerializeObject(body));
+                }
+            }
+
+            var res = await req.GetResponseAsync();
+            using (var sr = new StreamReader(res.GetResponseStream())) {
+                return JsonConvert.DeserializeObject<TModel>(await sr.ReadToEndAsync());
+            }
+        }
+
+        internal async Task<TModel> PatchAsync<TModel>(Uri uri, object body) {
+            var req = WebRequest.CreateHttp(uri);
+            req.Method = "PATCH";
             req.Credentials = new NetworkCredential(username, password);
 
             if (body != null) {

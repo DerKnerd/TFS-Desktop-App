@@ -15,6 +15,7 @@
     using Views;
     using Windows.ApplicationModel.Activation;
     using Windows.ApplicationModel.Resources;
+    using Windows.Foundation;
     using Windows.Security.Credentials;
     using Windows.Storage;
     using Windows.UI.Xaml;
@@ -69,6 +70,22 @@
 
         public static MtFrame GetFrame() {
             return (Current as App).GetFrame(null);
+        }
+
+        public static Point GetPointerPosition() {
+            var currentWindow = Window.Current;
+
+            var point = default(Point);
+
+            try {
+                point = currentWindow.CoreWindow.PointerPosition;
+            } catch (UnauthorizedAccessException) {
+                return new Point(double.NegativeInfinity, double.NegativeInfinity);
+            }
+
+            var bounds = currentWindow.Bounds;
+
+            return new Point(point.X - bounds.X, point.Y - bounds.Y);
         }
 
         public static string GetString(string key) {

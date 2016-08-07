@@ -21,7 +21,8 @@ namespace TFS.Client.Dialogs {
             set { SetValue(ModelProperty, value); }
         }
 
-        private void ContentDialog_PrimaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args) {
+        private async void ContentDialog_PrimaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args) {
+            await Model.SaveChanges(App.TfsClient);
 
         }
 

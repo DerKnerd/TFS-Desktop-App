@@ -30,7 +30,7 @@
             </controls:DataGrid.Columns>
             <controls:DataGrid.ItemDetailsTemplate>
                 <DataTemplate>
-                    <StackPanel Margin="12,0,12,12">
+                    <StackPanel Margin="12,0,12,12" RightTapped="Item_RightTapped">
                         <TextBlock Text="{Binding Fields.Title}" FontWeight="Bold" />
                         <controls:HtmlTextBlock Html="{Binding Fields.Description}"></controls:HtmlTextBlock>
                         <Grid>
