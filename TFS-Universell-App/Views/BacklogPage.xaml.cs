@@ -9,6 +9,8 @@ namespace TFS.Client.Views {
     using Windows.UI.Xaml;
     using Dialogs;
     using Windows.UI.Xaml.Controls;
+    using Windows.UI.Popups;
+    using Windows.Foundation;
 
     /// <summary>
     /// Eine leere Seite, die eigenständig verwendet oder zu der innerhalb eines Rahmens navigiert werden kann.
@@ -59,7 +61,7 @@ namespace TFS.Client.Views {
                     var diag = new WorkItemDetailsDialog(DataGrid.SelectedItem as WorkItem);
                     diag.Closed += async (s, a) => {
                         if (a.Result == ContentDialogResult.Primary)
-                            ViewModel = await SprintViewModel.GetCurrentSprint();
+                            ViewModel = await TasksViewModel.GetBacklogTasksViewModel();
                     };
                     diag.MaxWidth = this.ActualWidth;
                     diag.MinWidth = this.ActualWidth;

@@ -19,7 +19,7 @@
         </DataTemplate>
     </mt:MtPage.Resources>
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-        <controls:DataGrid ItemsSource="{Binding ElementName=view, Path=ViewModel.Items}" SelectionChanged="DataGrid_SelectionChanged">
+        <controls:DataGrid Name="DataGrid" ItemsSource="{Binding ElementName=view, Path=ViewModel.Items}" SelectionChanged="DataGrid_SelectionChanged">
             <controls:DataGrid.Columns>
                 <controls:DataGridTextColumn Width="80" Header="ID" Binding="{Binding ID}" />
                 <controls:DataGridTextColumn Width="100" Header="Typ" Binding="{Binding Fields.WorkItemType}" />
