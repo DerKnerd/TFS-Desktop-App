@@ -242,6 +242,7 @@
                 GetFrame(null).Navigate(typeof(ListProjectsPage));
             }
         }
+
         private void fillQueryHamburgerItems() {
             var project = ApplicationData.Current.LocalSettings.Values["SelectedProject"]?.ToString();
         }
@@ -251,7 +252,8 @@
                 Content = GetString("ListProjectsPageTitle/Text"),
                 ContentIcon = new FontAwesome.UWP.FontAwesome { Icon = FontAwesome.UWP.FontAwesomeIcon.List },
                 Icon = new FontAwesome.UWP.FontAwesome { Icon = FontAwesome.UWP.FontAwesomeIcon.List },
-                PageType = typeof(ListProjectsPage)
+                PageType = typeof(ListProjectsPage),
+                UseSinglePageInstance = false
             };
             return item;
         }
@@ -261,7 +263,7 @@
                 PlaceholderText = GetString("Search")
             };
             searchItem.QuerySubmitted += async (sender, args) => {
-                await _hamburgerFrameBuilder.Frame.NavigateToExistingOrNewPageAsync(typeof(ListProjectsPage), args.QueryText);
+                await _hamburgerFrameBuilder.Frame.NavigateAsync(typeof(ListProjectsPage), args.QueryText);
             };
             return searchItem;
         }
@@ -271,7 +273,16 @@
                 PlaceholderText = GetString("Search")
             };
             searchItem.QuerySubmitted += async (sender, args) => {
-                await _hamburgerFrameBuilder.Frame.NavigateToExistingOrNewPageAsync(typeof(SearchTasksPage), args.QueryText);
+                var id = default(int);
+                if (int.TryParse(args.QueryText, out id)) {
+                    var workitem = await TfsClient.GetWorkItem(id);
+                    var diag = new WorkItemDetailsDialog(workitem);
+                    diag.MaxWidth = GetFrame().ActualWidth;
+                    diag.MinWidth = GetFrame().ActualWidth;
+                    diag.MaxHeight = GetFrame().ActualHeight;
+                    diag.MinHeight = GetFrame().ActualHeight;
+                    await diag.ShowAsync();
+                }
             };
             return searchItem;
         }
