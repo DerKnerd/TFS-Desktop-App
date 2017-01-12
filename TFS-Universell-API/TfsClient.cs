@@ -61,11 +61,11 @@
         }
 
         public async Task<WorkItemCollection> GetBacklogWorkItems(Guid project) {
-            return await GetWorkItemsByQuery(project, $"SELECT [System.Id] FROM WorkItemLinks WHERE Source.[System.TeamProject] = @project AND Source.[System.State] <> 'Fertig' AND Source.[System.State] <> 'Geschlossen' AND Source.[System.State] <> 'Entfernt' AND Source.[System.WorkItemType] = 'Product Backlog Item'");
+            return await GetWorkItemsByQuery(project, $"SELECT [System.Id] FROM WorkItemLinks WHERE Source.[System.TeamProject] = @project AND Source.[System.State] <> 'Fertig' AND Source.[System.State] <> 'Geschlossen' AND Source.[System.State] <> 'Entfernt' AND (Source.[System.WorkItemType] = 'Product Backlog Item' OR Source.[System.WorkItemType] = 'User Story')");
         }
 
         public async Task<WorkItemCollection> GetCurrentSprint(Guid project) {
-            return await GetWorkItemsByQuery(project, $"SELECT [System.Id] FROM WorkItemLinks WHERE Source.[System.TeamProject] = @project AND Source.[System.State] <> 'Entfernt' AND Source.[System.IterationPath] = @CurrentIteration AND Source.[System.WorkItemType] = 'Product Backlog Item'");
+            return await GetWorkItemsByQuery(project, $"SELECT [System.Id] FROM WorkItemLinks WHERE Source.[System.TeamProject] = @project AND Source.[System.State] <> 'Entfernt' AND Source.[System.IterationPath] = @CurrentIteration AND (Source.[System.WorkItemType] = 'Product Backlog Item' OR Source.[System.WorkItemType] = 'User Story')");
         }
 
         public async Task<WorkItemCollection> GetCurrentSprintActive(Guid project, int workitemId) {
