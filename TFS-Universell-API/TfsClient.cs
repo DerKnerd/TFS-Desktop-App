@@ -61,23 +61,38 @@
         }
 
         public async Task<WorkItemCollection> GetBacklogWorkItems(Guid project) {
-            return await GetWorkItemsByQuery(project, $"SELECT [System.Id] FROM WorkItemLinks WHERE Source.[System.TeamProject] = @project AND Source.[System.State] <> 'Fertig' AND Source.[System.State] <> 'Geschlossen' AND Source.[System.State] <> 'Entfernt' AND (Source.[System.WorkItemType] = 'Product Backlog Item' OR Source.[System.WorkItemType] = 'User Story')");
+            return await GetWorkItemsByQuery(project, $"SELECT [System.Id] FROM WorkItemLinks WHERE Source.[System.TeamProject] = @project AND Source.[System.State] <> 'Fertig' AND Source.[System.State] <> 'Geschlossen' AND Source.[System.State] <> 'Entfernt' AND (Source.[System.WorkItemType] = 'Product Backlog Item' OR Source.[System.WorkItemType] = 'User Story') ORDER BY Source.[Microsoft.VSTS.Common.Priority] ASC");
         }
 
         public async Task<WorkItemCollection> GetCurrentSprint(Guid project) {
-            return await GetWorkItemsByQuery(project, $"SELECT [System.Id] FROM WorkItemLinks WHERE Source.[System.TeamProject] = @project AND Source.[System.State] <> 'Entfernt' AND Source.[System.IterationPath] = @CurrentIteration AND (Source.[System.WorkItemType] = 'Product Backlog Item' OR Source.[System.WorkItemType] = 'User Story')");
+            return await GetWorkItemsByQuery(project, $"SELECT [System.Id] FROM WorkItemLinks WHERE Source.[System.TeamProject] = @project AND Source.[System.State] <> 'Entfernt' AND Source.[System.IterationPath] = @CurrentIteration AND (Source.[System.WorkItemType] = 'Product Backlog Item' OR Source.[System.WorkItemType] = 'User Story') ORDER BY Source.[Microsoft.VSTS.Common.Priority] ASC");
         }
 
         public async Task<WorkItemCollection> GetCurrentSprintActive(Guid project, int workitemId) {
-            return await GetSprintWorkItemsByQuery(project, workitemId, "In Bearbeitung");
+            var res = await GetSprintWorkItemsByQuery(project, workitemId, "In Bearbeitung");
+            if (!res.Any())
+            {
+                return await GetSprintWorkItemsByQuery(project, workitemId, "Aktiv");
+            }
+            return res;
         }
 
         public async Task<WorkItemCollection> GetCurrentSprintDone(Guid project, int workitemId) {
-            return await GetSprintWorkItemsByQuery(project, workitemId, "Fertig");
+            var res = await GetSprintWorkItemsByQuery(project, workitemId, "Fertig");
+            if (!res.Any())
+            {
+                return await GetSprintWorkItemsByQuery(project, workitemId, "Geschlossen");
+            }
+            return res;
         }
 
         public async Task<WorkItemCollection> GetCurrentSprintPlanning(Guid project, int workitemId) {
-            return await GetSprintWorkItemsByQuery(project, workitemId, "Aufgabenplanung");
+            var res = await GetSprintWorkItemsByQuery(project, workitemId, "Aufgabenplanung");
+            if (!res.Any())
+            {
+                return await GetSprintWorkItemsByQuery(project, workitemId, "Neu");
+            }
+            return res;
         }
 
         public async Task<WorkItemCollection> GetMyWorkItems(Guid project) {
